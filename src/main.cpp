@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     
-    JpegSink sink(ofile);
+    JpegBlendedSink sink(ofile);
 
     const int quality = 75;
     if (!sink.init(src.width(), src.height(), quality, src.numComponents())) {
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    src.onRowRead.connect(boost::bind(&JpegSink::processRow, &sink, _1));
+    src.onRowRead.connect(boost::bind(&JpegBlendedSink::processRow, &sink, _1));
 
     src.process();
     sink.flush();

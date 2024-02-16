@@ -27,10 +27,10 @@ private:
     FILE * mInfile = nullptr;
 };
 
-class JpegSink {
+class JpegBlendedSink {
 public:
-    JpegSink(const std::string& path);
-    ~JpegSink();
+    JpegBlendedSink(const std::string& path);
+    ~JpegBlendedSink();
     bool init(int width, int height, int quality, int componentsPerPixel);
     void processRow(std::vector<unsigned char>&);
     void flush();

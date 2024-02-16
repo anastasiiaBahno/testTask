@@ -53,20 +53,20 @@ void JpegSource::process() {
     jpeg_finish_decompress(&mCinfo);
 }
 
-JpegSink::~JpegSink() {
+JpegBlendedSink::~JpegBlendedSink() {
     jpeg_destroy_compress(&mCinfo);
     if (mOutfile != nullptr) 
         fclose(mOutfile);
 }
 
-JpegSink::JpegSink(const std::string& path) 
+JpegBlendedSink::JpegBlendedSink(const std::string& path) 
     : mPath(path) {
 
     mCinfo.err = jpeg_std_error(&mJerr);
     jpeg_create_compress(&mCinfo);
 }
 
-bool JpegSink::init(int width, int height, int quality, int componentsPerPixel) {
+bool JpegBlendedSink::init(int width, int height, int quality, int componentsPerPixel) {
     if ((mOutfile = fopen(mPath.c_str(), "wb")) == NULL) {
         LOG_ERROR << "Could not open file " << mOutfile;
         return false;
@@ -83,7 +83,7 @@ bool JpegSink::init(int width, int height, int quality, int componentsPerPixel) 
     return true;
 }
 
-void JpegSink::processRow(std::vector<unsigned char>& inRow) {
+void JpegBlendedSink::processRow(std::vector<unsigned char>& inRow) {
     JSAMPROW row_pointer[1];
 
     if (!mPrevRow.empty()) {
@@ -98,6 +98,6 @@ void JpegSink::processRow(std::vector<unsigned char>& inRow) {
     mPrevRow = inRow;
 }
 
-void JpegSink::flush() {
+void JpegBlendedSink::flush() {
     jpeg_finish_compress(&mCinfo);
 }
