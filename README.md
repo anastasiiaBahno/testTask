@@ -2,10 +2,10 @@
 
 1. Build commands
 
-mkdir build
-cd build
-cmake ../src
-make -j5
+mkdir build \
+cd build \
+cmake ../src \
+make -j5 
 
 2. Run commands
 
