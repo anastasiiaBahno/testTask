@@ -87,6 +87,18 @@ void JpegBlendedSink::processRow(std::vector<unsigned char>& inRow) {
     JSAMPROW row_pointer[1];
 
     if (!mPrevRow.empty()) {
+
+        /*
+         * @todo According to libjpeg docu : 
+         * ...
+         * Pixels are stored by scanlines, with each scanline running from left to
+         * right.  The component values for each pixel are adjacent in the row;
+         * ...
+         * So, here is expected to get an array of bytes with interleaved Y,U,V components 
+         * and blend separately each channel for every pixel.
+         * 
+        */
+        
         for (int i = 0 ; i < inRow.size(); ++i) {
             inRow[i] = 0.5 * (inRow[i] + mPrevRow[i]);
         }
