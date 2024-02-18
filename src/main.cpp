@@ -2,6 +2,7 @@
 #include <string>
 
 #include <boost/program_options.hpp>
+#include <boost/bind/bind.hpp>
 
 #include "JpegUtils.hpp"
 #include "log.h"
@@ -57,7 +58,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    src.onRowRead.connect(boost::bind(&JpegBlendedSink::processRow, &sink, _1));
+    src.onRowRead.connect(boost::bind(&JpegBlendedSink::processRow, &sink, boost::placeholders::_1));
 
     src.process();
     sink.flush();

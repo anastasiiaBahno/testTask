@@ -78,7 +78,8 @@ bool JpegBlendedSink::init(int width, int height, int quality, int componentsPer
     mCinfo.input_components = 3;		
     mCinfo.in_color_space = JCS_YCbCr;
     jpeg_set_defaults(&mCinfo);
-    jpeg_set_quality(&mCinfo, 80, TRUE);
+    jpeg_set_quality(&mCinfo, quality, TRUE);
+    //mCinfo.smoothing_factor = 50;
     jpeg_start_compress(&mCinfo, TRUE);
     return true;
 }
@@ -89,7 +90,7 @@ void JpegBlendedSink::processRow(std::vector<unsigned char>& inRow) {
     if (!mPrevRow.empty()) {
 
         /*
-         * @todo According to libjpeg docu : 
+         * According to libjpeg docu : 
          * ...
          * Pixels are stored by scanlines, with each scanline running from left to
          * right.  The component values for each pixel are adjacent in the row;
@@ -98,9 +99,11 @@ void JpegBlendedSink::processRow(std::vector<unsigned char>& inRow) {
          * and blend separately each channel for every pixel.
          * 
         */
-        
+       unsigned char* v1 = inRow.data();
+       unsigned char* v2 = mPrevRow.data();
+ #pragma omp simd
         for (int i = 0 ; i < inRow.size(); ++i) {
-            inRow[i] = 0.5 * (inRow[i] + mPrevRow[i]);
+            v1[i] = 0.5 * (v1[i] + v2[i]);
         }
     } 
     
